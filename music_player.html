@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+				<link rel="stylesheet" href="music_player.css">
+				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+				<link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+				<meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+				<title>Music player</title>
+				 <link rel="stylesheet"  href="music_player.css">
+</head>
+<body>
+<div class="container" data-aos="fade-up" >
+				<h1>Music Player Dashboard</h1>
+
+<div class="music" data-aos="flip-left">
+				<div class="content" data-aos="zoom-out">
+								<h2 id="title">Midnight Vibes</h2>
+								<img src="sitaare.jpg" id="cover">
+								<audio id="audio"></audio>
+								
+								<div class="progress-box">
+
+<span id="current">0:00</span>
+
+<input type="range" id="progress" value="0">
+
+<span id="duration">0:00</span>
+</div>
+								
+<div class="controls">
+
+<div class="left-icons">
+<i class="fa-regular fa-heart"></i>
+</div>
+
+<div class="main-controls">
+
+<i class="fa-solid fa-backward"
+onclick="prevSong()"></i>
+
+<i class="fa-solid fa-circle-play"
+id="playBtn"
+onclick="playSong()"></i>
+
+<i class="fa-solid fa-forward"
+onclick="nextSong()"></i>
+
+</div>
+
+<div class="right-icons">
+
+<i class="fa-solid fa-shuffle"></i>
+
+<i class="fa-solid fa-repeat"></i>
+</div>
+</div>
+									<div class="volume-box">
+
+<i class="fa-solid fa-volume-high"></i>
+
+<input
+type="range" id="volume" min="0" max="100" value="100">
+
+</div>
+				</div>
+				
+</div>
+				
+				
+				
+
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+<script>
+AOS.init({
+ duration:1000,
+ once:false
+});
+
+const songs=[
+{
+title:"Sitaare",
+image:"sitaare.jpg",
+audio:"sitare.m4a"
+},
+
+{
+title:"Señorita",
+image:"senorita.png",
+audio:"senorita.mp3"
+},
+
+{
+title:"Tera Ban Jaunga",
+image:"teraban.jpeg",
+audio:"teraban.mp3"
+},
+
+{
+title:"Mere Rashke Qamar",
+image:"mereRashke.jpg",
+audio:"mereRashke.mp3"
+},
+
+{
+title:"Gucci",
+image:"gucci.jpeg",
+audio:"gucci.mp3"
+}
+];
+
+let i=0;
+
+let title=document.getElementById("title");
+let cover=document.getElementById("cover");
+let audio=document.getElementById("audio");
+let playBtn=document.getElementById("playBtn");
+let volume=document.getElementById("volume");
+let progress=document.getElementById("progress");
+let current=document.getElementById("current");
+let duration=document.getElementById("duration");
+
+function loadSong(){
+
+if(!songs[i]) return;
+
+title.innerHTML=songs[i].title;
+cover.src=songs[i].image;
+audio.src=songs[i].audio;
+
+}
+
+function playSong(){
+
+if(audio.paused){
+
+audio.play();
+playBtn.className=
+"fa-solid fa-circle-pause";
+
+}else{
+
+audio.pause();
+playBtn.className=
+"fa-solid fa-circle-play";
+
+}
+
+}
+
+function nextSong(){
+
+i=(i+1)%songs.length;
+
+loadSong();
+audio.play();
+
+}
+
+function prevSong(){
+
+i=(i-1+songs.length)%songs.length;
+
+loadSong();
+audio.play();
+
+}
+
+volume.oninput=()=>{
+
+audio.volume=
+volume.value/100;
+
+}
+
+audio.ontimeupdate=()=>{
+
+progress.value=
+audio.currentTime;
+
+current.innerHTML=
+time(audio.currentTime);
+
+}
+
+audio.onloadedmetadata=()=>{
+
+progress.max=
+audio.duration;
+
+duration.innerHTML=
+time(audio.duration);
+
+}
+
+progress.oninput=()=>{
+
+audio.currentTime=
+progress.value;
+
+}
+
+function time(x){
+
+let m=Math.floor(x/60);
+
+let s=Math.floor(x%60);
+
+return m+":"+(s<10?"0":"")+s;
+
+}
+
+audio.onended=nextSong;
+
+loadSong();
+
+</script>
+</body>
+</html>
